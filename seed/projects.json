@@ -1,0 +1,26 @@
+{
+  "$comment": "Reference data. Note that PRJ-003 has no Estimator assigned - that is deliberate.",
+  "projects": [
+    {
+      "code": "PRJ-001",
+      "name": "Vaalkop Water Treatment Works - Phase 2",
+      "client": "Regional Water Authority",
+      "currency": "ZAR",
+      "startDate": "2026-02-01"
+    },
+    {
+      "code": "PRJ-002",
+      "name": "Hafenstrasse Mixed-Use Development",
+      "client": "Nordbau Immobilien GmbH",
+      "currency": "ZAR",
+      "startDate": "2026-03-15"
+    },
+    {
+      "code": "PRJ-003",
+      "name": "N3 Interchange Bridge Deck Replacement",
+      "client": "National Roads Agency",
+      "currency": "ZAR",
+      "startDate": "2026-06-01"
+    }
+  ]
+}

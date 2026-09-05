@@ -1,0 +1,106 @@
+{
+  "$comment": "Reference data. Rates are effective-dated: pick the row whose effectiveFrom is the latest date <= the estimate's pricing date. 'labourComponent' is part of 'rate', not additional to it.",
+  "items": [
+    {
+      "code": "CONC-C30",
+      "description": "Ready-mix concrete C30/37, supplied and placed",
+      "unitOfMeasure": "m3",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 1450.00, "labourComponent": 310.00 },
+        { "effectiveFrom": "2026-07-01", "rate": 1512.50, "labourComponent": 328.00 }
+      ]
+    },
+    {
+      "code": "CONC-C25",
+      "description": "Ready-mix concrete C25/30, supplied and placed",
+      "unitOfMeasure": "m3",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 1298.75, "labourComponent": 295.50 },
+        { "effectiveFrom": "2026-07-01", "rate": 1341.00, "labourComponent": 306.25 }
+      ]
+    },
+    {
+      "code": "REBAR-Y12",
+      "description": "High-tensile reinforcement bar Y12, cut, bent and fixed",
+      "unitOfMeasure": "t",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 24750.000, "labourComponent": 6120.00 },
+        { "effectiveFrom": "2026-05-15", "rate": 25980.500, "labourComponent": 6450.00 }
+      ]
+    },
+    {
+      "code": "FORM-WALL",
+      "description": "Wall formwork, erect and strike",
+      "unitOfMeasure": "m2",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 412.30, "labourComponent": 268.00 }
+      ]
+    },
+    {
+      "code": "EXC-BULK",
+      "description": "Bulk excavation in soft material, cart away",
+      "unitOfMeasure": "m3",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 187.65, "labourComponent": 61.20 },
+        { "effectiveFrom": "2026-04-01", "rate": 194.20, "labourComponent": 64.80 }
+      ]
+    },
+    {
+      "code": "BRICK-NFP",
+      "description": "NFP brickwork, half-brick skin in cement mortar",
+      "unitOfMeasure": "m2",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 356.90, "labourComponent": 198.40 }
+      ]
+    },
+    {
+      "code": "PLANT-CRN",
+      "description": "Tower crane, standing time including operator",
+      "unitOfMeasure": "hr",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 1875.00, "labourComponent": 640.00 },
+        { "effectiveFrom": "2026-07-01", "rate": 1962.50, "labourComponent": 690.00 }
+      ]
+    },
+    {
+      "code": "LAB-GEN",
+      "description": "General labourer, all-in rate",
+      "unitOfMeasure": "hr",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 96.40, "labourComponent": 96.40 }
+      ]
+    },
+    {
+      "code": "FIX-M12",
+      "description": "Anchor bolt M12, supply and install",
+      "unitOfMeasure": "each",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 10.01, "labourComponent": 3.40 }
+      ]
+    },
+    {
+      "code": "FIX-M16",
+      "description": "Anchor bolt M16, supply and install",
+      "unitOfMeasure": "each",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 10.01, "labourComponent": 3.55 }
+      ]
+    },
+    {
+      "code": "FIX-M20",
+      "description": "Anchor bolt M20, supply and install",
+      "unitOfMeasure": "each",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 10.01, "labourComponent": 3.80 }
+      ]
+    },
+    {
+      "code": "PAINT-INT",
+      "description": "Internal wall paint, two coats on plaster",
+      "unitOfMeasure": "m2",
+      "rates": [
+        { "effectiveFrom": "2026-01-01", "rate": 78.25, "labourComponent": 52.10 }
+      ]
+    }
+  ]
+}

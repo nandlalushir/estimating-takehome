@@ -1,0 +1,17 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+# Node
+node_modules/
+dist/
+.angular/
+.vite/
+# Env
+.env
+*.local
+# OS
+.DS_Store
+Thumbs.db

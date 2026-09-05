@@ -1,0 +1,2 @@
+This project should have no reference to EF Core, ASP.NET Core, or any other framework.
+That constraint is a good candidate for your structural enforcement mechanism.

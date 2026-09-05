@@ -1,0 +1,40 @@
+{
+  "$comment": "Development seed users. There is no authentication in this exercise - identity arrives in an X-User-Email header. Role and projectCodes are server-side data: resolve them from here, never from the client. Roles are exactly: Estimator, Reviewer, Viewer, ProjectManager.",
+  "users": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "email": "estimator@example.com",
+      "displayName": "Thandi Nkosi",
+      "role": "Estimator",
+      "projectCodes": ["PRJ-001", "PRJ-002"]
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "email": "estimator2@example.com",
+      "displayName": "Marcus Feldt",
+      "role": "Estimator",
+      "projectCodes": ["PRJ-002"]
+    },
+    {
+      "id": "33333333-3333-3333-3333-333333333333",
+      "email": "reviewer@example.com",
+      "displayName": "Anja Brenner",
+      "role": "Reviewer",
+      "projectCodes": ["PRJ-001", "PRJ-002", "PRJ-003"]
+    },
+    {
+      "id": "44444444-4444-4444-4444-444444444444",
+      "email": "viewer@example.com",
+      "displayName": "Sipho Dlamini",
+      "role": "Viewer",
+      "projectCodes": ["PRJ-001"]
+    },
+    {
+      "id": "55555555-5555-5555-5555-555555555555",
+      "email": "pm@example.com",
+      "displayName": "Claire Osei",
+      "role": "ProjectManager",
+      "projectCodes": ["PRJ-001", "PRJ-002", "PRJ-003"]
+    }
+  ]
+}

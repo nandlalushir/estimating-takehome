@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ce-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ceuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-Passw0rd!}
+      POSTGRES_DB: ${POSTGRES_DB:-costestimating}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-ceuser} -d ${POSTGRES_DB:-costestimating}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ce-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MSSQL_SA_PASSWORD:-Passw0rd!Passw0rd!}
+      MSSQL_PID: Developer
+    ports:
+      - "${MSSQL_PORT:-1433}:1433"
+    volumes:
+      - mssqldata:/var/opt/mssql
+
+  mongo:
+    image: mongo:7
+    container_name: ce-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-ceuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-Passw0rd!}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodata:/data/db
+
+volumes:
+  pgdata:
+  mssqldata:
+  mongodata:
