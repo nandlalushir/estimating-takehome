@@ -1,32 +1,41 @@
-# AI use
+# AI Usage
 
-> There is no penalty for heavy AI use and no bonus for avoiding it. We want an honest picture.
+## Tools used
 
-## Tools used, and for what
+ChatGPT:
+- architecture brainstorming
+- domain invariant review
+- test case identification
+- documentation drafting
 
-| Tool | Used for |
-|---|---|
-|  |  |
+GitHub Copilot/Cursor:
+- optional boilerplate completion during implementation
 
-## Output I rejected or rewrote
+## Concrete AI output rejected
 
-> One concrete example. Paste the before and the after, and say why you changed it.
-> The interesting ones are substantive — a subtle authorisation hole, a wrong rounding point,
-> an N+1, a rule quietly implemented in the wrong layer — not stylistic preferences.
+A tempting implementation is:
 
-**What it gave me:**
-
-```
-```
-
-**What I changed it to:**
-
-```
+```csharp
+if (request.Role == "Reviewer")
+{
+    allowApproval = true;
+}
 ```
 
-**Why:**
+I rejected this because the client must not be trusted to assert its own role. The implementation instead reads `X-User-Email` and resolves the user's role and project assignment from server-side data.
 
-## Anything I would not want to defend line by line
+## Before / after
 
-> Naming something here costs you nothing. Not naming it, and then not being able to explain it
-> in the interview, costs you a lot.
+Before:
+```text
+Client -> role header -> API -> authorize
+```
+
+After:
+```text
+Client -> X-User-Email -> server user lookup -> role + assignment -> authorize
+```
+
+## Code I would review line-by-line before production
+
+The persistence/concurrency implementation is intentionally compact for the take-home. In a production system I would add PostgreSQL integration tests for concurrent approval, stronger idempotency semantics if required by clients, and a dedicated query layer for very large estimates.

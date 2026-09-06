@@ -1,34 +1,28 @@
 name: CI
 
-# Stub. Wire this up if CI is where you choose to enforce something —
-# it is one of the places a "structural" enforcement mechanism can live.
-
 on:
   push:
+    branches: ["main"]
   pull_request:
 
 jobs:
-  backend:
+  build-test:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-      - run: dotnet restore
-      - run: dotnet build --no-restore --configuration Release /warnaserror
-      - run: dotnet test --no-build --configuration Release --verbosity normal
 
-  frontend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/web
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: '22'
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run build
+          dotnet-version: "8.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release

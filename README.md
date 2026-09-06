@@ -1,122 +1,140 @@
-# Cost Estimating — Take-Home Starter
+# Cost Estimating Take-Home
 
-This scaffold exists only to save you setup minutes. It contains **no domain code** — modelling the domain is the exercise.
+A .NET 8 + PostgreSQL implementation of the construction cost estimating slice.
 
-You are free to delete all of it and start from `dotnet new`. Nothing here is graded.
+## Requirements
 
-## What's in the box
+- .NET 8 SDK
+- Docker Desktop
+- Node.js 20+ and npm (for the React UI)
 
-```
-src/
-  CostEstimating.Domain/          entities, value objects, invariants — no framework references
-  CostEstimating.Application/     use cases
-  CostEstimating.Infrastructure/  persistence, external concerns
-  CostEstimating.Api/             ASP.NET Core Web API host
-  web/                            your React or Angular app
-tests/
-  CostEstimating.Tests/
-  CostEstimating.ArchitectureTests/
-seed/                             users, projects, effective-dated rate catalogue
-docs/                             templates for your required documents
-docker-compose.yml                PostgreSQL and SQL Server, pick one
-.github/workflows/ci.yml          CI stub
-```
+## Run locally
 
-The `src/` layout is a suggestion, not a requirement. Vertical slices, a modular monolith, or a single project are all defensible — **tell us why in your ADR** if you restructure.
-
-## Getting started
+### 1. Start PostgreSQL
 
 ```bash
-# 1. Databases (start only the one you need)
-cp .env.example .env
-docker compose up -d postgres      # or: docker compose up -d sqlserver
-
-# 2. Backend projects
-dotnet new sln -n CostEstimating
-dotnet new classlib -o src/CostEstimating.Domain
-dotnet new classlib -o src/CostEstimating.Application
-dotnet new classlib -o src/CostEstimating.Infrastructure
-dotnet new webapi    -o src/CostEstimating.Api
-dotnet new xunit     -o tests/CostEstimating.Tests
-dotnet new xunit     -o tests/CostEstimating.ArchitectureTests
-dotnet sln add $(find src tests -name '*.csproj')
-
-# 3. Frontend — your choice
-npm create vite@latest web -- --template react-ts     # in src/
-ng new web --routing --style=scss                     # or Angular
+docker compose up -d
 ```
 
-Connection strings are in `.env.example`.
-
-## Identity — you are not building authentication
-
-There is no login, no token issuing and no password handling in this exercise. Identity arrives on every request in an `X-User-Email` header. Paste this in and move on:
-
-```csharp
-// DevIdentityMiddleware.cs — development only. In production this is replaced by
-// a JWT bearer handler; nothing else about your authorisation code should have to change.
-public sealed class DevIdentityMiddleware(RequestDelegate next)
-{
-    public const string HeaderName = "X-User-Email";
-
-    public async Task InvokeAsync(HttpContext context)
-    {
-        if (!context.Request.Headers.TryGetValue(HeaderName, out var value)
-            || string.IsNullOrWhiteSpace(value))
-        {
-            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return;
-        }
-
-        // Identity only. No role claim, deliberately: a client does not get to
-        // tell you what it is allowed to do. Resolve role and project assignment
-        // from your own store.
-        var identity = new ClaimsIdentity(
-            [new Claim(ClaimTypes.Name, value.ToString().Trim())],
-            authenticationType: "Dev");
-
-        context.User = new ClaimsPrincipal(identity);
-        await next(context);
-    }
-}
-
-// Program.cs
-app.UseMiddleware<DevIdentityMiddleware>();
-```
-
-An email that does not match a seeded user should be rejected — that is your code, not this middleware's.
-
-Calling the API:
+### 2. Run the API
 
 ```bash
-curl -H "X-User-Email: estimator@example.com" http://localhost:5000/api/projects
+dotnet restore
+dotnet run --project src/CostEstimating.Api
 ```
 
-In the UI, a role switcher that sets the header is enough. No login screen.
+API/Swagger:
+- `http://localhost:5080`
+- `http://localhost:5080/swagger`
 
-## Seed data notes
+The API creates the development schema and seed data on startup.
 
-- **Rates are effective-dated.** A catalogue item has multiple rate rows; the applicable one is the latest `effectiveFrom` on or before the estimate's pricing date.
-- `labourComponent` is a *part of* `rate`, not additional to it.
-- `role` and `projectCodes` in `users.json` are **server-side data**. Resolve them from your store on every request; never take them from the client.
-- Loading the seed data at startup is fine. So is a migration, or a script. Your call.
+### 3. Run the React UI
 
-## Your documents
+In another terminal:
 
-Templates are in `docs/`. All four are required — see the brief, section 4.
+```bash
+cd web
+npm install
+npm run dev
+```
 
-- `docs/DESIGN.md` — **commit this before you write code.**
-- `docs/ADR/` — copy `0000-template.md` for each decision.
-- `docs/REQUIREMENTS.md` — define / implement / enforce traceability.
+Open `http://localhost:5173`.
+
+The Vite proxy sends `/api` calls to `http://localhost:5080`.
+
+## Demo users
+
+The UI role switcher changes the `X-User-Email` header:
+
+| User | Effective role | Project capability |
+|---|---|---|
+| estimator@example.com | Estimator | Edit/submit |
+| reviewer@example.com | Reviewer | Approve/reject, see labour |
+| viewer@example.com | Viewer | Read-only |
+| manager@example.com | Estimator | Project manager; can correct approved description and see labour |
+
+There is deliberately no authentication in this exercise.
+
+## API
+
+```text
+GET  /api/projects
+POST /api/projects/{projectId}/estimates
+GET  /api/estimates/{estimateId}
+PUT  /api/estimates/{estimateId}/lines/{catalogueItemId}
+POST /api/estimates/{estimateId}/submit
+POST /api/estimates/{estimateId}/approve
+POST /api/estimates/{estimateId}/reject
+POST /api/estimates/{estimateId}/return-to-draft
+PATCH /api/estimates/{estimateId}/description
+```
+
+Every request should include:
+
+```http
+X-User-Email: estimator@example.com
+```
+
+## Example curl
+
+```bash
+curl -H "X-User-Email: estimator@example.com" \
+  http://localhost:5080/api/projects
+```
+
+```bash
+curl -H "X-User-Email: estimator@example.com" \
+  http://localhost:5080/api/estimates/40000000-0000-0000-0000-000000000001
+```
+
+## Tests
+
+```bash
+dotnet test
+```
+
+The test suite focuses on high-risk domain invariants and architecture enforcement.
+
+## Design
+
+See:
+
+- `docs/DESIGN.md`
+- `docs/REQUIREMENTS.md`
 - `docs/AI-USE.md`
+- `docs/ADR/`
 
-## Before you submit
+## Important design choices
 
-- [ ] `docs/DESIGN.md` committed before the first code commit
-- [ ] Someone can clone and run this from these instructions in under 10 minutes
-- [ ] The README says how to act as each role — the header value, or the control in the UI
-- [ ] `docs/REQUIREMENTS.md` filled in, including the rules you deliberately did not implement
-- [ ] At least one enforcement mechanism that is structural, not a unit test — and you have watched it fail
-- [ ] `docs/AI-USE.md` filled in
-- [ ] No real secrets committed
-- [ ] Actual time spent noted in the README
+1. PostgreSQL + EF Core.
+2. Estimate is the aggregate root.
+3. Effective-dated rates are selected by pricing date.
+4. Selected rate/labour cost is snapshotted on the line.
+5. Duplicate catalogue items update the existing line.
+6. Approved estimates are immutable except for project-manager description correction.
+7. Roles are resolved from server-side user data; the client supplies identity only.
+8. Project assignment is checked on every project/estimate operation.
+9. Labour cost is excluded from DTOs for unauthorized roles.
+10. Audit events are written for lifecycle transitions.
+
+## SDLC / commit history
+
+The assessment asks for design-first commits. Recommended sequence is documented in `docs/DESIGN.md`. Do not squash these into one commit if submitting as a take-home.
+
+## Time
+
+Record the actual implementation time here before submission. Example:
+
+`Implementation time: 4h 15m`
+
+The brief explicitly prefers an honest time record over pretending the work took three hours.
+
+## Production follow-ups
+
+- PostgreSQL integration tests for concurrent approval.
+- Strong idempotency key support if clients can retry across network failures.
+- Keyset pagination/virtualization for very large estimates.
+- Real authentication/identity integration.
+- Structured logging sink and OpenTelemetry.
+- Browser E2E tests.

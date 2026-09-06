@@ -1,17 +1,12 @@
-# .NET
 bin/
 obj/
+.vs/
+.idea/
 *.user
 *.suo
-.vs/
-# Node
 node_modules/
 dist/
-.angular/
-.vite/
-# Env
 .env
-*.local
-# OS
-.DS_Store
-Thumbs.db
+*.log
+TestResults/
+coverage/

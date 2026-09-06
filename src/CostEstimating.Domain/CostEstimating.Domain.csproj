@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>CostEstimating.Domain</RootNamespace>
+  </PropertyGroup>
+</Project>

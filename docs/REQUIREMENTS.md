@@ -1,39 +1,43 @@
-# Requirements — define, implement, enforce
+# Requirements Traceability
 
-> One row per rule from section 2 of the brief. Include the rules you did **not** implement, marked as such, with a reason.
->
-> "Enforced" means something that **fails automatically** when the rule is broken: a test, an analyzer, an
-> architecture test, a database constraint, a CI gate, or a type that makes the invalid state unrepresentable.
-> A code comment is not enforcement. "Code review" is not enforcement.
->
-> At least one mechanism in this table must be **structural** rather than a unit test.
+| Rule | Defined | Implemented | Enforcement |
+|---|---|---|---|
+| R1 | CatalogueItem/CatalogueRate | Domain + EF | Unit/domain validation + DB schema |
+| R2 | RateResolver | Application | Automated domain/API path + effective-date query |
+| R3 | EstimateLine | Domain | Unit tests |
+| R4 | EstimateLine.Recalculate | Domain | Unit tests |
+| R5 | Estimate.Total | Domain | Unit tests |
+| R6 | Quantity validation | Domain | Unit tests |
+| R7 | AddOrUpdateLine + DB unique index | Domain/Infrastructure | Unit test + unique DB constraint |
+| R8 | Estimate state machine | Domain | Unit tests |
+| R9 | Submit | Domain/Application | Unit tests |
+| R10 | EnsureEditable | Domain | Unit test |
+| R11 | CorrectApprovedDescription + authorization | Domain/Application | Code path + authorization |
+| R12 | Transaction + lifecycle + concurrency token | Application/Infrastructure | Integration strategy; should be exercised against PostgreSQL before submission |
+| R13 | EstimateAuditEvent | Application/Infrastructure | Audit write path |
+| R14 | UserRole | Domain | Authorization service |
+| R15 | AuthorizationService | Application | Server-side checks |
+| R16 | EnsureCanApproveAsync | Application | Server-side check |
+| R17 | Estimate DTO projection | Application | Labour field null for unauthorized roles |
+| R18 | ProjectAssignment | Infrastructure/Application | Server-side project access |
+| R19 | CurrentUser reads identity only | API/Application | Role is resolved from DB |
+| R20 | Indexes + projection | Infrastructure/Application | Query design; load test recommended |
 
-| Rule | How it is defined | Where it is implemented | How it is enforced | Status |
-|---|---|---|---|---|
-| R1 | | | | |
-| R2 | | | | |
-| R3 | | | | |
-| R4 | | | | |
-| R5 | | | | |
-| R6 | | | | |
-| R7 | | | | |
-| R8 | | | | |
-| R9 | | | | |
-| R10 | | | | |
-| R11 | | | | |
-| R12 | | | | |
-| R13 | | | | |
-| R14 | | | | |
-| R15 | | | | |
-| R16 | | | | |
-| R17 | | | | |
-| R18 | | | | |
-| R19 | | | | |
-| R20 | | | | |
+## Deliberately not implemented
 
-*Status: Implemented / Partial / Not implemented (with reason) / Rejected as a requirement (with reason).*
+No real authentication/token issuing was implemented because the brief explicitly removes authentication from the exercise. The supplied development identity header is used only as identity, not as a source of authorization claims.
 
-## Structural enforcement
+## Submission hardening checklist
 
-> Which mechanism is the structural one, what rule it protects, how to run it,
-> and — briefly — what you did to confirm it actually fails when the rule is broken.
+Before submitting to an evaluator, run:
+
+```bash
+dotnet restore
+dotnet build --configuration Release
+dotnet test --configuration Release
+cd web
+npm install
+npm run build
+```
+
+Then perform the PostgreSQL approval retry scenario twice and verify only one audit event exists.
