@@ -118,21 +118,9 @@ See:
 9. Labour cost is excluded from DTOs for unauthorized roles.
 10. Audit events are written for lifecycle transitions.
 
-## SDLC / commit history
-
-The assessment asks for design-first commits. Recommended sequence is documented in `docs/DESIGN.md`. Do not squash these into one commit if submitting as a take-home.
-
-## Time
-
-Record the actual implementation time here before submission. Example:
-
-`Implementation time: 4h 15m`
-
-The brief explicitly prefers an honest time record over pretending the work took three hours.
-
 ## Production follow-ups
 
-- PostgreSQL integration tests for concurrent approval.
+- SQL server integration tests for concurrent approval.
 - Strong idempotency key support if clients can retry across network failures.
 - Keyset pagination/virtualization for very large estimates.
 - Real authentication/identity integration.
